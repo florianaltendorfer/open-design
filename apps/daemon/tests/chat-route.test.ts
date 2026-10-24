@@ -869,7 +869,10 @@ process.stdin.on('end', () => {
     );
   });
 
-  it('runs BYOK OpenCode memory extraction with the bare provider model id', async () => {
+  it.each([
+    ['bare', 'cohere/north-mini-code:free'],
+    ['pre-qualified', 'open-design-byok/cohere/north-mini-code:free'],
+  ])('runs BYOK OpenCode memory extraction with the bare provider model id (%s request)', async (_label, requestModel) => {
     if (!process.env.OD_DATA_DIR) {
       throw new Error('OD_DATA_DIR is required for BYOK OpenCode memory tests');
     }
@@ -919,7 +922,7 @@ process.stdin.on('end', () => {
               projectId,
               conversationId: `conv-${randomUUID()}`,
               message: 'hello memory',
-              model: 'cohere/north-mini-code:free',
+              model: requestModel,
               byokProvider: {
                 protocol: 'openai',
                 apiKey: 'sk-test-byok',

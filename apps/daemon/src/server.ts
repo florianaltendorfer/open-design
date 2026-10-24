@@ -15152,7 +15152,11 @@ export async function startServer({
             apiKey: (byokProvider as { apiKey?: string }).apiKey,
             baseUrl: (byokProvider as { baseUrl?: string }).baseUrl,
             apiVersion: (byokProvider as { apiVersion?: string }).apiVersion,
-            model: typeof safeModel === 'string' ? safeModel : undefined,
+            // byok-opencode's safeModel is OpenCode-qualified (`open-design-byok/<id>`);
+            // the extractor calls the provider directly, so it needs the bare id.
+            model: byokOpenCodeProvider && typeof model === 'string'
+              ? model.trim()
+              : typeof safeModel === 'string' ? safeModel : undefined,
             requiresApiKey: (byokProvider as { requiresApiKey?: boolean }).requiresApiKey,
           }
         : null;
